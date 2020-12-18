@@ -42,6 +42,10 @@ namespace RubikCubeSolver.Core
             }
         }
     
+        public bool IsOneColor => m_colors
+            .Distinct()
+            .Count() == 1;
+
         public IReadOnlyList<Color> BottomRow => m_colors
             .Skip(c_size * 2)
             .Take(c_size)
