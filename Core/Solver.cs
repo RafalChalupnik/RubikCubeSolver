@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RubikCubeSolver.Core.Extensions;
 
 namespace RubikCubeSolver.Core
 {
     public static class Solver
     {
-        private static readonly IReadOnlyCollection<Rotation> s_possibleRotations = Enum.GetValues(typeof(Rotation));
+        private static readonly IReadOnlyCollection<Rotation> s_possibleRotations = Enum.GetValues(typeof(Rotation)).Cast<Rotation>().ToList();
 
         public static List<Rotation> Solve(Cube cube)
             => Foo(cube, depth: 20);

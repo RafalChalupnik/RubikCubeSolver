@@ -58,288 +58,444 @@ namespace RubikCubeSolver.Core
             }
         }
 
-        public void Rotate(Rotation rotation)
+        public Cube Rotate(Rotation rotation)
         {
             switch (rotation)
             {
-                case Rotation.BackClockwise: BackRotateClockwise(); break;
-                case Rotation.BackCounterClockwise: BackRotateCounterClockwise(); break;
-                case Rotation.BackDouble: BackRotateDouble(); break;
-                case Rotation.DownClockwise: DownRotateClockwise(); break;
-                case Rotation.DownCounterClockwise: DownRotateCounterClockwise(); break;
-                case Rotation.DownDouble: DownRotateDouble(); break;
-                case Rotation.FrontClockwise: FrontRotateClockwise(); break;
-                case Rotation.FrontCounterClockwise: FrontRotateCounterClockwise(); break;
-                case Rotation.FrontDouble: FrontRotateDouble(); break;
-                case Rotation.LeftClockwise: LeftRotateClockwise(); break;
-                case Rotation.LeftCounterClockwise: LeftRotateCounterClockwise(); break;
-                case Rotation.LeftDouble: LeftRotateDouble(); break;
-                case Rotation.RightClockwise: RightRotateClockwise(); break;
-                case Rotation.RightCounterClockwise: RightRotateCounterClockwise(); break;
-                case Rotation.RightDouble: RightRotateDouble(); break;
-                case Rotation.TopClockwise: TopRotateClockwise(); break;
-                case Rotation.TopCounterClockwise: TopRotateCounterClockwise(); break;
-                case Rotation.TopDouble: TopRotateDouble(); break;
+                case Rotation.BackClockwise: return BackRotateClockwise();
+                case Rotation.BackCounterClockwise: return BackRotateCounterClockwise();
+                case Rotation.BackDouble: return BackRotateDouble();
+                case Rotation.DownClockwise: return DownRotateClockwise();
+                case Rotation.DownCounterClockwise: return DownRotateCounterClockwise();
+                case Rotation.DownDouble: return DownRotateDouble();
+                case Rotation.FrontClockwise: return FrontRotateClockwise();
+                case Rotation.FrontCounterClockwise: return FrontRotateCounterClockwise();
+                case Rotation.FrontDouble: return FrontRotateDouble();
+                case Rotation.LeftClockwise: return LeftRotateClockwise();
+                case Rotation.LeftCounterClockwise: return LeftRotateCounterClockwise();
+                case Rotation.LeftDouble: return LeftRotateDouble();
+                case Rotation.RightClockwise: return RightRotateClockwise();
+                case Rotation.RightCounterClockwise: return RightRotateCounterClockwise();
+                case Rotation.RightDouble: return RightRotateDouble();
+                case Rotation.TopClockwise: return TopRotateClockwise();
+                case Rotation.TopCounterClockwise: return TopRotateCounterClockwise();
+                case Rotation.TopDouble: return TopRotateDouble();
                 default: throw new ArgumentException($"Invalid rotation: '{rotation}'.");
             }
         }
 
-        private void BackRotateClockwise()
+        private Cube BackRotateClockwise()
         {
             var newDownRow = Left.LeftColumn.Reverse().ToList();
-            var newTopRow = Right.RightColumn;
             var newLeftColumn = Top.TopRow.Reverse().ToList();
             var newRightColumn = Down.TopRow;
+            var newTopRow = Right.RightColumn;
 
-            Back.RotateClockwise();
-            Down.SetTopRow(newDownRow);
-            Top.SetTopRow(newTopRow);
-            Left.SetLeftColumn(newLeftColumn);
-            Right.SetRightColumn(newRightColumn);
+            var newBack = Back.RotateClockwise();
+            var newDown = Down.SetTopRow(newDownRow);
+            var newLeft = Left.SetLeftColumn(newLeftColumn);
+            var newRight = Right.SetRightColumn(newRightColumn);
+            var newTop = Top.SetTopRow(newTopRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void BackRotateCounterClockwise()
+        private Cube BackRotateCounterClockwise()
         {
             var newDownRow = Right.RightColumn;
             var newTopRow = Left.LeftColumn.Reverse().ToList();
             var newLeftColumn = Down.TopRow.Reverse().ToList();
             var newRightColumn = Top.TopRow;
 
-            Back.RotateCounterClockwise();
-            Down.SetTopRow(newDownRow);
-            Top.SetTopRow(newTopRow);
-            Left.SetLeftColumn(newLeftColumn);
-            Right.SetRightColumn(newRightColumn);
+            var newBack = Back.RotateCounterClockwise();
+            var newDown = Down.SetTopRow(newDownRow);
+            var newLeft = Left.SetLeftColumn(newLeftColumn);
+            var newRight = Right.SetRightColumn(newRightColumn);
+            var newTop = Top.SetTopRow(newTopRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void BackRotateDouble()
+        private Cube BackRotateDouble()
         {
             var newDownRow = Top.TopRow;
             var newTopRow = Down.TopRow;
             var newLeftColumn = Right.RightColumn.Reverse().ToList();
             var newRightColumn = Left.LeftColumn.Reverse().ToList();
 
-            Back.RotateDouble();
-            Down.SetTopRow(newDownRow);
-            Top.SetTopRow(newTopRow);
-            Left.SetLeftColumn(newLeftColumn);
-            Right.SetRightColumn(newRightColumn);
+            var newBack = Back.RotateDouble();
+            var newDown = Down.SetTopRow(newDownRow);
+            var newLeft = Left.SetLeftColumn(newLeftColumn);
+            var newRight = Right.SetRightColumn(newRightColumn);
+            var newTop = Top.SetTopRow(newTopRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
     
-        private void DownRotateClockwise()
+        private Cube DownRotateClockwise()
         {
             var newBackRow = Right.BottomRow;
             var newFrontRow = Left.BottomRow;
             var newLeftRow = Back.BottomRow;
             var newRightRow = Front.BottomRow;
 
-            Down.RotateClockwise();
-            Back.SetBottomRow(newBackRow);
-            Front.SetBottomRow(newFrontRow);
-            Left.SetBottomRow(newLeftRow);
-            Right.SetBottomRow(newRightRow);
+            var newBack = Back.SetBottomRow(newBackRow);
+            var newDown = Down.RotateClockwise();
+            var newFront = Front.SetBottomRow(newFrontRow);
+            var newLeft = Left.SetBottomRow(newLeftRow);
+            var newRight = Right.SetBottomRow(newRightRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight
+            };
         }
 
-        private void DownRotateCounterClockwise()
+        private Cube DownRotateCounterClockwise()
         {
             var newBackRow = Left.BottomRow;
             var newFrontRow = Right.BottomRow;
             var newLeftRow = Front.BottomRow;
             var newRightRow = Back.BottomRow;
 
-            Down.RotateCounterClockwise();
-            Back.SetBottomRow(newBackRow);
-            Front.SetBottomRow(newFrontRow);
-            Left.SetBottomRow(newLeftRow);
-            Right.SetBottomRow(newRightRow);
+            var newBack = Back.SetBottomRow(newBackRow);
+            var newDown = Down.RotateCounterClockwise();
+            var newFront = Front.SetBottomRow(newFrontRow);
+            var newLeft = Left.SetBottomRow(newLeftRow);
+            var newRight = Right.SetBottomRow(newRightRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight
+            };
         }
 
-        private void DownRotateDouble()
+        private Cube DownRotateDouble()
         {
             var newBackRow = Front.BottomRow;
             var newFrontRow = Back.BottomRow;
             var newLeftRow = Right.BottomRow;
             var newRightRow = Left.BottomRow;
 
-            Down.RotateDouble();
-            Back.SetBottomRow(newBackRow);
-            Front.SetBottomRow(newFrontRow);
-            Left.SetBottomRow(newLeftRow);
-            Right.SetBottomRow(newRightRow);
+            var newBack = Back.SetBottomRow(newBackRow);
+            var newDown = Down.RotateDouble();
+            var newFront = Front.SetBottomRow(newFrontRow);
+            var newLeft = Left.SetBottomRow(newLeftRow);
+            var newRight = Right.SetBottomRow(newRightRow);
+
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight
+            };
         }
     
-        private void FrontRotateClockwise()
+        private Cube FrontRotateClockwise()
         {
             var newDownRow = Right.LeftColumn;
             var newTopRow = Left.RightColumn.Reverse().ToList();
             var newLeftColumn = Down.BottomRow.Reverse().ToList();
             var newRightColumn = Top.BottomRow;
 
-            Front.RotateClockwise();
-            Down.SetBottomRow(newDownRow);
-            Top.SetBottomRow(newTopRow);
-            Left.SetRightColumn(newLeftColumn);
-            Right.SetLeftColumn(newRightColumn);
+            var newDown = Down.SetBottomRow(newDownRow);
+            var newFront = Front.RotateClockwise();
+            var newLeft = Left.SetRightColumn(newLeftColumn);
+            var newRight = Right.SetLeftColumn(newRightColumn);
+            var newTop = Top.SetBottomRow(newTopRow);
+
+            return this with 
+            {
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void FrontRotateCounterClockwise()
+        private Cube FrontRotateCounterClockwise()
         {
             var newDownRow = Left.RightColumn.Reverse().ToList();
             var newTopRow = Right.LeftColumn;
             var newLeftColumn = Top.BottomRow.Reverse().ToList();
             var newRightColumn = Down.BottomRow;
 
-            Front.RotateCounterClockwise();
-            Down.SetBottomRow(newDownRow);
-            Top.SetBottomRow(newTopRow);
-            Left.SetRightColumn(newLeftColumn);
-            Right.SetLeftColumn(newRightColumn);
+            var newDown = Down.SetBottomRow(newDownRow);
+            var newFront = Front.RotateCounterClockwise();
+            var newLeft = Left.SetRightColumn(newLeftColumn);
+            var newRight = Right.SetLeftColumn(newRightColumn);
+            var newTop = Top.SetBottomRow(newTopRow);
+
+            return this with 
+            {
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void FrontRotateDouble()
+        private Cube FrontRotateDouble()
         {
             var newDownRow = Top.BottomRow;
             var newTopRow = Down.BottomRow;
             var newLeftColumn = Right.LeftColumn.Reverse().ToList();
             var newRightColumn = Left.RightColumn.Reverse().ToList();
 
-            Front.RotateDouble();
-            Down.SetBottomRow(newDownRow);
-            Top.SetBottomRow(newTopRow);
-            Left.SetRightColumn(newLeftColumn);
-            Right.SetLeftColumn(newRightColumn);
+            var newDown = Down.SetBottomRow(newDownRow);
+            var newFront = Front.RotateDouble();
+            var newLeft = Left.SetRightColumn(newLeftColumn);
+            var newRight = Right.SetLeftColumn(newRightColumn);
+            var newTop = Top.SetBottomRow(newTopRow);
+
+            return this with 
+            {
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
     
-        private void LeftRotateClockwise()
+        private Cube LeftRotateClockwise()
         {
             var newTopColumn = Back.RightColumn.Reverse().ToList();
             var newDownColumn = Front.LeftColumn.Reverse().ToList();
             var newFrontColumn = Top.LeftColumn;
             var newBackColumn = Down.RightColumn;
 
-            Left.RotateClockwise();
+            var newBack = Back.SetRightColumn(newBackColumn);
+            var newDown = Down.SetRightColumn(newDownColumn);
+            var newFront = Front.SetLeftColumn(newFrontColumn);
+            var newLeft = Left.RotateClockwise();
+            var newTop = Top.SetLeftColumn(newTopColumn);
 
-            Top.SetLeftColumn(newTopColumn);
-            Down.SetRightColumn(newDownColumn);
-            Front.SetLeftColumn(newFrontColumn);
-            Back.SetRightColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Top = newTop
+            };
         }
 
-        private void LeftRotateCounterClockwise()
+        private Cube LeftRotateCounterClockwise()
         {
             var newTopColumn = Front.LeftColumn;
             var newDownColumn = Back.RightColumn;
             var newFrontColumn = Down.RightColumn.Reverse().ToList();
             var newBackColumn = Top.LeftColumn.Reverse().ToList();
 
-            Left.RotateCounterClockwise();
+            var newBack = Back.SetRightColumn(newBackColumn);
+            var newDown = Down.SetRightColumn(newDownColumn);
+            var newFront = Front.SetLeftColumn(newFrontColumn);
+            var newLeft = Left.RotateCounterClockwise();
+            var newTop = Top.SetLeftColumn(newTopColumn);
 
-            Top.SetLeftColumn(newTopColumn);
-            Down.SetRightColumn(newDownColumn);
-            Front.SetLeftColumn(newFrontColumn);
-            Back.SetRightColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Top = newTop
+            };
         }
 
-        private void LeftRotateDouble()
+        private Cube LeftRotateDouble()
         {
             var newTopColumn = Down.RightColumn.Reverse().ToList();
             var newDownColumn = Top.LeftColumn.Reverse().ToList();
             var newFrontColumn = Back.RightColumn.Reverse().ToList();
             var newBackColumn = Front.LeftColumn.Reverse().ToList();
 
-            Left.RotateDouble();
+            var newBack = Back.SetRightColumn(newBackColumn);
+            var newDown = Down.SetRightColumn(newDownColumn);
+            var newFront = Front.SetLeftColumn(newFrontColumn);
+            var newLeft = Left.RotateDouble();
+            var newTop = Top.SetLeftColumn(newTopColumn);
 
-            Top.SetLeftColumn(newTopColumn);
-            Down.SetRightColumn(newDownColumn);
-            Front.SetLeftColumn(newFrontColumn);
-            Back.SetRightColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Left = newLeft,
+                Top = newTop
+            };
         }
 
-        private void RightRotateClockwise()
+        private Cube RightRotateClockwise()
         {
             var newTopColumn = Front.RightColumn;
             var newDownColumn = Back.LeftColumn;
             var newFrontColumn = Down.LeftColumn.Reverse().ToList();
             var newBackColumn = Top.RightColumn.Reverse().ToList();
 
-            Right.RotateClockwise();
+            var newBack = Back.SetLeftColumn(newBackColumn);
+            var newDown = Down.SetLeftColumn(newDownColumn);
+            var newFront = Front.SetRightColumn(newFrontColumn);
+            var newRight = Right.RotateClockwise();
+            var newTop = Top.SetRightColumn(newTopColumn);
 
-            Top.SetRightColumn(newTopColumn);
-            Down.SetLeftColumn(newDownColumn);
-            Front.SetRightColumn(newFrontColumn);
-            Back.SetLeftColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void RightRotateCounterClockwise()
+        private Cube RightRotateCounterClockwise()
         {
             var newTopColumn = Back.LeftColumn.Reverse().ToList();
             var newDownColumn = Front.RightColumn.Reverse().ToList();
             var newFrontColumn = Top.RightColumn;
             var newBackColumn = Down.LeftColumn;
 
-            Right.RotateCounterClockwise();
+            var newBack = Back.SetLeftColumn(newBackColumn);
+            var newDown = Down.SetLeftColumn(newDownColumn);
+            var newFront = Front.SetRightColumn(newFrontColumn);
+            var newRight = Right.RotateCounterClockwise();
+            var newTop = Top.SetRightColumn(newTopColumn);
 
-            Top.SetRightColumn(newTopColumn);
-            Down.SetLeftColumn(newDownColumn);
-            Front.SetRightColumn(newFrontColumn);
-            Back.SetLeftColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void RightRotateDouble()
+        private Cube RightRotateDouble()
         {
             var newTopColumn = Down.LeftColumn.Reverse().ToList();
             var newDownColumn = Top.RightColumn.Reverse().ToList();
             var newFrontColumn = Back.LeftColumn.Reverse().ToList();
             var newBackColumn = Front.RightColumn.Reverse().ToList();
 
-            Right.RotateDouble();
+            var newBack = Back.SetLeftColumn(newBackColumn);
+            var newDown = Down.SetLeftColumn(newDownColumn);
+            var newFront = Front.SetRightColumn(newFrontColumn);
+            var newRight = Right.RotateDouble();
+            var newTop = Top.SetRightColumn(newTopColumn);
 
-            Top.SetRightColumn(newTopColumn);
-            Down.SetLeftColumn(newDownColumn);
-            Front.SetRightColumn(newFrontColumn);
-            Back.SetLeftColumn(newBackColumn);
+            return this with 
+            {
+                Back = newBack,
+                Down = newDown,
+                Front = newFront,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void TopRotateClockwise()
+        private Cube TopRotateClockwise()
         {
             var newBackRow = Left.TopRow;
             var newFrontRow = Right.TopRow;
             var newLeftRow = Front.TopRow;
             var newRightRow = Back.TopRow;
 
-            Top.RotateClockwise();
-            Back.SetTopRow(newBackRow);
-            Front.SetTopRow(newFrontRow);
-            Left.SetTopRow(newLeftRow);
-            Right.SetTopRow(newRightRow);
+            var newBack = Back.SetTopRow(newBackRow);
+            var newFront = Front.SetTopRow(newFrontRow);
+            var newLeft = Left.SetTopRow(newLeftRow);
+            var newRight = Right.SetTopRow(newRightRow);
+            var newTop = Top.RotateClockwise();
+
+            return this with 
+            {
+                Back = newBack,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void TopRotateCounterClockwise()
+        private Cube TopRotateCounterClockwise()
         {
             var newBackRow = Right.TopRow;
             var newFrontRow = Left.TopRow;
             var newLeftRow = Back.TopRow;
             var newRightRow = Front.TopRow;
 
-            Top.RotateCounterClockwise();
-            Back.SetTopRow(newBackRow);
-            Front.SetTopRow(newFrontRow);
-            Left.SetTopRow(newLeftRow);
-            Right.SetTopRow(newRightRow);
+            var newBack = Back.SetTopRow(newBackRow);
+            var newFront = Front.SetTopRow(newFrontRow);
+            var newLeft = Left.SetTopRow(newLeftRow);
+            var newRight = Right.SetTopRow(newRightRow);
+            var newTop = Top.RotateClockwise();
+
+            return this with 
+            {
+                Back = newBack,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
 
-        private void TopRotateDouble()
+        private Cube TopRotateDouble()
         {
             var newBackRow = Front.TopRow;
             var newFrontRow = Back.TopRow;
             var newLeftRow = Right.TopRow;
             var newRightRow = Left.TopRow;
 
-            Top.RotateDouble();
-            Back.SetTopRow(newBackRow);
-            Front.SetTopRow(newFrontRow);
-            Left.SetTopRow(newLeftRow);
-            Right.SetTopRow(newRightRow);
+            var newBack = Back.SetTopRow(newBackRow);
+            var newFront = Front.SetTopRow(newFrontRow);
+            var newLeft = Left.SetTopRow(newLeftRow);
+            var newRight = Right.SetTopRow(newRightRow);
+            var newTop = Top.RotateClockwise();
+
+            return this with 
+            {
+                Back = newBack,
+                Front = newFront,
+                Left = newLeft,
+                Right = newRight,
+                Top = newTop
+            };
         }
     }
 }
