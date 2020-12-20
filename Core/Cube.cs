@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace RubikCubeSolver.Core
 {
-    public class Cube
+    public record Cube
     {
-        public Side Back { get; }
+        public Side Back { get; init; }
 
-        public Side Down { get; }
+        public Side Down { get; init; }
 
-        public Side Front { get; }
+        public Side Front { get; init; }
 
-        public Side Left { get; }
+        public Side Left { get; init; }
 
-        public Side Right { get; }
+        public Side Right { get; init; }
 
-        public Side Top { get; }
+        public Side Top { get; init; }
 
         public Cube()
         {
@@ -86,9 +86,9 @@ namespace RubikCubeSolver.Core
 
         private void BackRotateClockwise()
         {
-            var newDownRow = Left.LeftColumn.Reverse();
+            var newDownRow = Left.LeftColumn.Reverse().ToList();
             var newTopRow = Right.RightColumn;
-            var newLeftColumn = Top.TopRow.Reverse();
+            var newLeftColumn = Top.TopRow.Reverse().ToList();
             var newRightColumn = Down.TopRow;
 
             Back.RotateClockwise();
@@ -101,8 +101,8 @@ namespace RubikCubeSolver.Core
         private void BackRotateCounterClockwise()
         {
             var newDownRow = Right.RightColumn;
-            var newTopRow = Left.LeftColumn.Reverse();
-            var newLeftColumn = Down.TopRow.Reverse();
+            var newTopRow = Left.LeftColumn.Reverse().ToList();
+            var newLeftColumn = Down.TopRow.Reverse().ToList();
             var newRightColumn = Top.TopRow;
 
             Back.RotateCounterClockwise();
@@ -116,8 +116,8 @@ namespace RubikCubeSolver.Core
         {
             var newDownRow = Top.TopRow;
             var newTopRow = Down.TopRow;
-            var newLeftColumn = Right.RightColumn.Reverse();
-            var newRightColumn = Left.LeftColumn.Reverse();
+            var newLeftColumn = Right.RightColumn.Reverse().ToList();
+            var newRightColumn = Left.LeftColumn.Reverse().ToList();
 
             Back.RotateDouble();
             Down.SetTopRow(newDownRow);
@@ -171,8 +171,8 @@ namespace RubikCubeSolver.Core
         private void FrontRotateClockwise()
         {
             var newDownRow = Right.LeftColumn;
-            var newTopRow = Left.RightColumn.Reverse();
-            var newLeftColumn = Down.BottomRow.Reverse();
+            var newTopRow = Left.RightColumn.Reverse().ToList();
+            var newLeftColumn = Down.BottomRow.Reverse().ToList();
             var newRightColumn = Top.BottomRow;
 
             Front.RotateClockwise();
@@ -184,9 +184,9 @@ namespace RubikCubeSolver.Core
 
         private void FrontRotateCounterClockwise()
         {
-            var newDownRow = Left.RightColumn.Reverse();
+            var newDownRow = Left.RightColumn.Reverse().ToList();
             var newTopRow = Right.LeftColumn;
-            var newLeftColumn = Top.BottomRow.Reverse();
+            var newLeftColumn = Top.BottomRow.Reverse().ToList();
             var newRightColumn = Down.BottomRow;
 
             Front.RotateCounterClockwise();
@@ -200,8 +200,8 @@ namespace RubikCubeSolver.Core
         {
             var newDownRow = Top.BottomRow;
             var newTopRow = Down.BottomRow;
-            var newLeftColumn = Right.LeftColumn.Reverse();
-            var newRightColumn = Left.RightColumn.Reverse();
+            var newLeftColumn = Right.LeftColumn.Reverse().ToList();
+            var newRightColumn = Left.RightColumn.Reverse().ToList();
 
             Front.RotateDouble();
             Down.SetBottomRow(newDownRow);
@@ -212,8 +212,8 @@ namespace RubikCubeSolver.Core
     
         private void LeftRotateClockwise()
         {
-            var newTopColumn = Back.RightColumn.Reverse();
-            var newDownColumn = Front.LeftColumn.Reverse();
+            var newTopColumn = Back.RightColumn.Reverse().ToList();
+            var newDownColumn = Front.LeftColumn.Reverse().ToList();
             var newFrontColumn = Top.LeftColumn;
             var newBackColumn = Down.RightColumn;
 
@@ -229,8 +229,8 @@ namespace RubikCubeSolver.Core
         {
             var newTopColumn = Front.LeftColumn;
             var newDownColumn = Back.RightColumn;
-            var newFrontColumn = Down.RightColumn.Reverse();
-            var newBackColumn = Top.LeftColumn.Reverse();
+            var newFrontColumn = Down.RightColumn.Reverse().ToList();
+            var newBackColumn = Top.LeftColumn.Reverse().ToList();
 
             Left.RotateCounterClockwise();
 
@@ -242,10 +242,10 @@ namespace RubikCubeSolver.Core
 
         private void LeftRotateDouble()
         {
-            var newTopColumn = Down.RightColumn.Reverse();
-            var newDownColumn = Top.LeftColumn.Reverse();
-            var newFrontColumn = Back.RightColumn.Reverse();
-            var newBackColumn = Front.LeftColumn.Reverse();
+            var newTopColumn = Down.RightColumn.Reverse().ToList();
+            var newDownColumn = Top.LeftColumn.Reverse().ToList();
+            var newFrontColumn = Back.RightColumn.Reverse().ToList();
+            var newBackColumn = Front.LeftColumn.Reverse().ToList();
 
             Left.RotateDouble();
 
@@ -259,8 +259,8 @@ namespace RubikCubeSolver.Core
         {
             var newTopColumn = Front.RightColumn;
             var newDownColumn = Back.LeftColumn;
-            var newFrontColumn = Down.LeftColumn.Reverse();
-            var newBackColumn = Top.RightColumn.Reverse();
+            var newFrontColumn = Down.LeftColumn.Reverse().ToList();
+            var newBackColumn = Top.RightColumn.Reverse().ToList();
 
             Right.RotateClockwise();
 
@@ -272,8 +272,8 @@ namespace RubikCubeSolver.Core
 
         private void RightRotateCounterClockwise()
         {
-            var newTopColumn = Back.LeftColumn.Reverse();
-            var newDownColumn = Front.RightColumn.Reverse();
+            var newTopColumn = Back.LeftColumn.Reverse().ToList();
+            var newDownColumn = Front.RightColumn.Reverse().ToList();
             var newFrontColumn = Top.RightColumn;
             var newBackColumn = Down.LeftColumn;
 
@@ -287,10 +287,10 @@ namespace RubikCubeSolver.Core
 
         private void RightRotateDouble()
         {
-            var newTopColumn = Down.LeftColumn.Reverse();
-            var newDownColumn = Top.RightColumn.Reverse();
-            var newFrontColumn = Back.LeftColumn.Reverse();
-            var newBackColumn = Front.RightColumn.Reverse();
+            var newTopColumn = Down.LeftColumn.Reverse().ToList();
+            var newDownColumn = Top.RightColumn.Reverse().ToList();
+            var newFrontColumn = Back.LeftColumn.Reverse().ToList();
+            var newBackColumn = Front.RightColumn.Reverse().ToList();
 
             Right.RotateDouble();
 

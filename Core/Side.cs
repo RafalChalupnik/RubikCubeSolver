@@ -5,22 +5,19 @@ using RubikCubeSolver.Core.Extensions;
 
 namespace RubikCubeSolver.Core
 {
-    public class Side
+    public record Side
     {
         private const int c_size = 3;
 
-        private Color[] m_colors;
+        public IReadOnlyList<Color> Colors { get; init; }
 
         public Side(Color color)
         {
             AssertColorsAreValid(color);
 
-            m_colors = new Color[c_size * c_size];
-
-            for (var i = 0; i < m_colors.Length; i++)
-            {
-                m_colors[i] = color;
-            }
+            Colors = Enumerable.Range(0, c_size * c_size)
+                .Select(_ => color)
+                .ToList();
         }
 
         public Side(params Color[] colors)
@@ -33,125 +30,136 @@ namespace RubikCubeSolver.Core
             }
             
             AssertColorsAreValid(colors);
-
-            m_colors = new Color[colors.Length];
-
-            for (var i = 0; i < m_colors.Length; i++)
-            {
-                m_colors[i] = colors[i];
-            }
+            Colors = colors.ToList();
         }
     
-        public bool IsOneColor => m_colors
+        public bool IsOneColor => Colors
             .Distinct()
             .Count() == 1;
 
-        public IReadOnlyList<Color> BottomRow => m_colors
+        public IReadOnlyList<Color> BottomRow => Colors
             .Skip(c_size * 2)
             .Take(c_size)
             .ToList();
 
-        public IReadOnlyList<Color> LeftColumn => m_colors
+        public IReadOnlyList<Color> LeftColumn => Colors
             .Where((_, index) => index % c_size == 0)
             .ToList();
 
-        public IReadOnlyList<Color> RightColumn => m_colors
+        public IReadOnlyList<Color> RightColumn => Colors
             .Where((_, index) => index % c_size == 2)
             .ToList();
 
-        public IReadOnlyList<Color> TopRow => m_colors
+        public IReadOnlyList<Color> TopRow => Colors
             .Take(c_size)
             .ToList();
 
-        public void SetBottomRow(IReadOnlyList<Color> colors)
+        public Side SetBottomRow(IReadOnlyList<Color> colors)
         {
             if (colors.Count != c_size)
             {
                 throw new ArgumentException($"Expected exactly '{c_size}' colors, found '{colors.Count}'.");
             }
+
+            var newColors = colors.ToList();
 
             for (var i = c_size * 2; i < c_size * 3; i++)
             {
-                m_colors[i] = colors[i];
+                newColors[i] = colors[i];
             }
+
+            return this with { Colors = newColors };
         }
 
-        public void SetLeftColumn(IReadOnlyList<Color> colors)
+        public Side SetLeftColumn(IReadOnlyList<Color> colors)
         {
             if (colors.Count != c_size)
             {
                 throw new ArgumentException($"Expected exactly '{c_size}' colors, found '{colors.Count}'.");
             }
+            
+            var newColors = colors.ToList();
 
             for (var i = 0; i < 3; i++)
             {
-                m_colors[i * c_size] = colors[i];
+                newColors[i * c_size] = colors[i];
             }
+
+            return this with { Colors = newColors };
         }
 
-        public void SetRightColumn(IReadOnlyList<Color> colors)
+        public Side SetRightColumn(IReadOnlyList<Color> colors)
         {
             if (colors.Count != c_size)
             {
                 throw new ArgumentException($"Expected exactly '{c_size}' colors, found '{colors.Count}'.");
             }
+
+            var newColors = colors.ToList();
 
             for (var i = 0; i < 3; i++)
             {
-                m_colors[i * c_size + 2] = colors[i];
+                newColors[i * c_size + 2] = colors[i];
             }
+
+            return this with { Colors = newColors };
         }
 
-        public void SetTopRow(IReadOnlyList<Color> colors)
+        public Side SetTopRow(IReadOnlyList<Color> colors)
         {
             if (colors.Count != c_size)
             {
                 throw new ArgumentException($"Expected exactly '{c_size}' colors, found '{colors.Count}'.");
             }
+
+            var newColors = colors.ToList();
 
             for (var i = 0; i < c_size; i++)
             {
-                m_colors[i] = colors[i];
+                newColors[i] = colors[i];
             }
+
+            return this with { Colors = newColors };
         }
 
-        public void RotateClockwise()
+        public Side RotateClockwise()
         {
             var newColors = new Color[c_size * c_size];
 
-            newColors[0] = m_colors[6];
-            newColors[1] = m_colors[3];
-            newColors[2] = m_colors[0];
-            newColors[3] = m_colors[7];
-            newColors[4] = m_colors[4];
-            newColors[5] = m_colors[1];
-            newColors[6] = m_colors[8];
-            newColors[7] = m_colors[5];
-            newColors[8] = m_colors[2];
+            newColors[0] = Colors[6];
+            newColors[1] = Colors[3];
+            newColors[2] = Colors[0];
+            newColors[3] = Colors[7];
+            newColors[4] = Colors[4];
+            newColors[5] = Colors[1];
+            newColors[6] = Colors[8];
+            newColors[7] = Colors[5];
+            newColors[8] = Colors[2];
 
-            m_colors = newColors;
+            return this with { Colors = newColors };
         }
 
-        public void RotateCounterClockwise()
+        public Side RotateCounterClockwise()
         {
             var newColors = new Color[c_size * c_size];
 
-            newColors[0] = m_colors[2];
-            newColors[1] = m_colors[5];
-            newColors[2] = m_colors[8];
-            newColors[3] = m_colors[1];
-            newColors[4] = m_colors[4];
-            newColors[5] = m_colors[7];
-            newColors[6] = m_colors[0];
-            newColors[7] = m_colors[3];
-            newColors[8] = m_colors[6];
+            newColors[0] = Colors[2];
+            newColors[1] = Colors[5];
+            newColors[2] = Colors[8];
+            newColors[3] = Colors[1];
+            newColors[4] = Colors[4];
+            newColors[5] = Colors[7];
+            newColors[6] = Colors[0];
+            newColors[7] = Colors[3];
+            newColors[8] = Colors[6];
 
-            m_colors = newColors;
+            return this with { Colors = newColors };
         }
 
-        public void RotateDouble()
+        public Side RotateDouble()
         {
-            m_colors = m_colors.Reverse().ToArray();
+            var newColors = Colors.Reverse().ToArray();
+            return this with { Colors = newColors };
         }
 
         private static void AssertColorsAreValid(params Color[] colors)
